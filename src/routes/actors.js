@@ -6,8 +6,12 @@ module.exports = {
   getAll: function(req, res, next) {
     Actor.find(function(err, actors) {
       if (err) return ;
-
-       res.render('actors.ejs', {actors: actors}); 
+     Actor.find()
+		.populate('movies').exec(function(err, actors){
+			if (err) {next(err);};
+			 res.render('actors.ejs', {actors: actors}); 
+		});
+      // res.render('actors.ejs', {actors: actors}); 
     });
   },
 
@@ -59,21 +63,29 @@ module.exports = {
 
   addMovie: function(req, res, next) {
     Actor.findOne({ id: req.params.id }, function(err, actor) {
+    //  console.log('actor id = '+ req.params.id );
       if (err) return res.status(400).json(err);
       if (!actor) return res.status(404).json();
+  //    console.log('actor.name'+actor.name);
 
       Movie.findOne({ id: req.body.id }, function(err, movie) {
+    //     console.log('movie id = '+ req.body .id );
         if (err) return res.status(400).json(err);
         if (!movie) return res.status(404).json();
-
-        actor.movies.push(movie);
-        actor.save(function(err) {
+     //    console.log('movie.title'+movie.title);
+       // actor.movies.push(movie);
+    //    console.log('_id'+actor._id);
+        Actor.findOneAndUpdate({ id: actor.id } , {$push: {movies: movie}}, { upsert: true }, function(error, document)
+         {
           if (err) return res.status(500).json(err);
 
           res.status(201).json(actor);
         });
-      })
+      
+       
+      });
     });
+    
   },
 
 

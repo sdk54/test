@@ -97,11 +97,17 @@
    <tr>
      <td><%= movies[i].title %></td>
      <td><%= movies[i].year %></td>
-     <td><%= movies[i].actors %></td>
+    <td>
+     <% if (movies[i].actors.length==0 ) { %>
+     <h3> </h3>
+     <% } else { %>
+     <% for(var j=0; j < movies[i].actors.length; j++) { %>
+     <%= movies[i].actors[j].name  %>,
+     <% } } %>
+     </td>
    </tr>
 <% } %>
     </table>
-
     </div>
 
     </div>

@@ -6,18 +6,19 @@ module.exports = {
   getAll: function(req, res, next) {
     Movie.find(function(err, movies) {
       if (err) return;
-
-      res.render('movies.ejs', {movies: movies});  
+       Movie.find().populate('actors')
+		.exec(function(err, movies){
+			if (err) {next(err);};
+      console.log(movies);
+			 res.render('movies.ejs', {movies: movies}); 
+		});
+    //  res.render('movies.ejs', {movies: movies});  
     });
   },
   InsertOne: function(req, res, next) {
-    Movie.insertMany(req.body, function(err, movie)
-    {
-       if (err) return res.status(400).json(err);
 
-      res.status(201).json(movie);
-    } 
-   );
+   console.log("req ==>"+req); 
+    
   },
      getFormAdd: function(req, res, next) {
         Movie.find(function(err, movies) {
@@ -31,7 +32,6 @@ module.exports = {
   createOne: function(req, res, next) {
     Movie.create(req.body, function(err, movie) {
       if (err) return res.status(400).json(err);
-
       res.status(201).json(movie);
     });
   },
@@ -77,14 +77,17 @@ module.exports = {
         if (err) return res.status(400).json(err);
         if (!actor) return res.status(404).json();
 
-        movie.actors.push(actor);
-        movie.save(function(err) {
+        Movie.findOneAndUpdate({ id: movie.id } , {$push: {actors: actor}}, { upsert: true }, function(error, document)
+         {
           if (err) return res.status(500).json(err);
 
           res.status(201).json(movie);
         });
-      })
+      
+       
+      });
     });
+   
   },
 
 

@@ -23,4 +23,5 @@ var actorSchema = new mongoose.Schema({
  }]
 });
 actorSchema.plugin(generateId());
+//actorSchema.set('versionKey', false);
 module.exports = mongoose.model('Actor', actorSchema);

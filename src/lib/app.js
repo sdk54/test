@@ -46,5 +46,5 @@ app.get('/addActor',movies.getFormAdd);
 app.get('/addMovie',movies.getFormAdd);
 
 app.post('/addActor',actors.createOne);
-app.post('/addMovie',movies.InsertOne);
+app.route('/addMovie').post(movies.createOne);
 module.exports = app;
