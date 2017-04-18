@@ -98,6 +98,12 @@ module.exports = {
 
       // HACK TO CHANGE
       movie.actors = [];
+  /*     Movie.findOneAndUpdate({ id: movie.id } , {$pull: {actors: { id: req.body.id}}}, { upsert: true }, function(error, document)
+         {
+          if (err) return res.status(500).json(err);
+
+          res.status(201).json(movie);
+        });*/
       movie.save(function(err) {
         if (err) return res.status(400).json(err);
 
